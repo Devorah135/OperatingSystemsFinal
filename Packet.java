@@ -19,6 +19,10 @@ public class Packet {
     public Operation getOperation() {
         return operation;
     }
+    
+    public int getId() {
+    	return id;
+    }
 
    
 

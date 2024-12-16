@@ -5,7 +5,9 @@ import java.util.*;
 
 public class Client {
 
-    public static void main(String[] args) throws IOException {
+	static int id = 0;
+
+	public static void main(String[] args) throws IOException {
 
 		/*
 		 * if (args.length != 2) {
@@ -13,68 +15,43 @@ public class Client {
 		 * System.exit(1); }
 		 */
 
-        String hostName = "localhost"; //args[0];
-        int portNumber =  8080; //Integer.parseInt(args[1]);
+		String hostName = "localhost"; // args[0];
+		int port = 8080; // Integer.parseInt(args[1]);
 
-        try {
-        	Socket clientSocket = new Socket(hostName, portNumber);
-        		
-             PrintWriter requestWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-             BufferedReader responseReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-        	
-        	ClientToMaster writeToMaster = new ClientToMaster (clientSocket);
-        	writeToMaster.start();
+		try (Socket socket = new Socket(hostName, port);
+				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+			Scanner scanner = new Scanner(System.in);
 
-			/*
-			 * // Enter message to send to the server
-			 * System.out.println("Enter your message: "); String userMessage =
-			 * stdIn.readLine(); requestWriter.println(userMessage);
-			 * 
-			 * // Receive packets from the server ArrayList<String> packetsString = new
-			 * ArrayList<>(); int totalPacketsReceived = -1; String serverResponse;
-			 * 
-			 * while ((serverResponse = responseReader.readLine()) != null) { Packet
-			 * receivedPacket = Packet.fromString(serverResponse);
-			 * 
-			 * if (receivedPacket.getData().equals("END")) { break; }
-			 * 
-			 * if (totalPacketsReceived == -1) { totalPacketsReceived =
-			 * receivedPacket.getTotalpackets(); for (int i = 0; i < totalPacketsReceived;
-			 * i++) { packetsString.add(null); } }
-			 * 
-			 * // Store the received packet
-			 * packetsString.set(receivedPacket.getPacketnumber(),
-			 * receivedPacket.getData()); }
-			 * 
-			 * // Identify missing packets List<Integer> missingPacketsInt = new
-			 * ArrayList<>(); for (int i = 0; i < totalPacketsReceived; i++) { if
-			 * (packetsString.get(i) == null) { missingPacketsInt.add(i); } }
-			 * 
-			 * while (!missingPacketsInt.isEmpty()) {
-			 * System.out.println("Requesting missing packets: " +
-			 * missingPacketsInt.toString());
-			 * requestWriter.println("Request missing packets: " +
-			 * missingPacketsInt.toString());
-			 * 
-			 * serverResponse = responseReader.readLine(); Packet packet =
-			 * Packet.fromString(serverResponse);
-			 * packetsString.set(packet.getPacketnumber(), packet.getData());
-			 * 
-			 * missingPacketsInt.remove(Integer.valueOf(packet.getPacketnumber())); }
-			 * 
-			 * StringBuilder fullMessage = new StringBuilder(); for (String packetInfo :
-			 * packetsString) { fullMessage.append(packetInfo); }
-			 * System.out.println("Full message: " + fullMessage.toString().trim());
-			 */
+			while (true) {
+				System.out.println("Enter 1 for Job1 or 2 for Job2 or 3 to quit: ");
+				int job = scanner.nextInt();
+				scanner.nextLine();
+				if (job == 3) {
+					break; // Exit loop if user wants to stop
+				}
 
-        } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + hostName);
-            System.exit(1);
-        } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to " + hostName);
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
+				Packet packet = null;
+				if (job == 1) {
+					packet = new Packet(id++, Operation.JOB_1);
+				} else if (job == 2) {
+					packet = new Packet(id++, Operation.JOB_2);
+				}
+				out.println(packet.toString()); // Send job to master
+				System.out.println("Sent: " + packet.toString());
+
+				// Receive a response packet
+				String response = in.readLine();
+				System.out.println("Received: " + response);
+			}
+
+		} catch (UnknownHostException e) {
+			System.err.println("Don't know about host " + hostName);
+			System.exit(1);
+		} catch (IOException e) {
+			System.err.println("Couldn't get I/O for the connection to " + hostName);
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 }
