@@ -1,67 +1,61 @@
 import java.util.concurrent.BlockingQueue;
 
-public class Slave2 extends Thread{
+public class Slave2 extends Thread {
 
-    private int id;
-    private Operation operation;
-    private String message;
-    private BlockingQueue<Packet> queue;
+	private BlockingQueue<Packet> queue;
+	private ClientHandler clientHandler;
 
-    public Slave2( ) {
-        
+	public Slave2(BlockingQueue<Packet> blockingQueue) {
+		this.queue = blockingQueue;
+	}
+
+	 // Setter for ClientHandler
+    public void setClientHandler(ClientHandler clientHandler) {
+        this.clientHandler = clientHandler;
+    }
+    
+    public String job1() throws InterruptedException {
+        Thread.sleep(3000); // Simulate work (different timing for Slave2)
+        return "Executed operation 1 in slave 2";
     }
 
     public String job2() throws InterruptedException {
-       Thread.sleep(2000);
-       return("Executed operation 2 in slave 2");
+        Thread.sleep(8000); // Simulate work (different timing for Slave2)
+        return "Executed operation 2 in slave 2";
     }
 
-    //inefficient way to do job 1
-    public String job1() throws InterruptedException {
-        Thread.sleep(10000);
-        return("Executed operation 1 in slave 2");
-    }
-    
-    public void setMessage(String msg) {
-    	this.message = msg;
-    }
-    
-    public String getMessgae() {
-    	return message;
-    }
- 
-    public void setQueue(BlockingQueue<Packet> queue){
-        this.queue = queue;
-
-    }
-
-    public BlockingQueue<Packet> getQueue(){
-        return queue;
-
-    }
-   
     @Override
     public void run() {
-    	String msg = null;
-    	switch (operation) {
-    	case JOB_1:
-    		try {
-				msg = job1();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-    		break;
-    	case JOB_2:
-    		try {
-				msg = job2();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-    		break;
-    	default: msg = null;
-    		break;
-    	}
-    	setMessage(msg);
-    	System.out.println(msg);
+        while (true) { // Keep processing jobs from the queue
+            try {
+                // Take a job from the queue (blocks if the queue is empty)
+                Packet p = queue.take();
+                Operation o = p.getOperation();
+                String result;
+
+                // Process the job based on its type
+                switch (o) {
+                    case JOB_1:
+                        result = job1();
+                        break;
+                    case JOB_2:
+                        result = job2();
+                        break;
+                    default:
+                        result = "Unknown job type.";
+                }
+                clientHandler.updateCounterAfterCompletion(o, 2); // Notify master to update counter
+                System.out.println("Slave 2 completed: " + result);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Slave 2 interrupted: " + e.getMessage());
+                break; // Exit loop on interruption
+            }
+        }
     }
+
+	public BlockingQueue<Packet> getQueue() {
+		return queue;
+	}
 }
+

@@ -16,7 +16,7 @@ public class Client {
 		 */
 
 		String hostName = "localhost"; // args[0];
-		int port = 8080; // Integer.parseInt(args[1]);
+		int port = 30123; // Integer.parseInt(args[1]);
 
 		try (Socket socket = new Socket(hostName, port);
 				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
