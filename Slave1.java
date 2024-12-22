@@ -1,9 +1,11 @@
+import java.util.concurrent.BlockingQueue;
 
 public class Slave1 extends Thread {
 
     private int id;
     private Operation operation;
     private String message;
+    private BlockingQueue<Packet> queue;
 
     public Slave1(int id, Operation o) {
         this.id = id;
@@ -32,6 +34,16 @@ public class Slave1 extends Thread {
     
     public String getMessgae() {
     	return message;
+    }
+
+    public void setQueue(BlockingQueue<Packet> queue){
+        this.queue = queue;
+
+    }
+
+    public BlockingQueue<Packet> getQueue(){
+        return queue;
+
     }
     
     @Override

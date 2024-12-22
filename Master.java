@@ -22,12 +22,12 @@ public class Master {
 				Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 
-                new Thread(new ClientHandler(clientSocket)).start(); // Start a new thread for each client
-				// Slave1 slave1 = new Slave1(receivedPacket.getId(), receivedPacket.getOperation());
-				// 	slave1.start();
-				// Slave2 slave2 = new Slave2(receivedPacket.getId(), receivedPacket.getOperation());				
-				// 	slave2.start();
-
+				Slave1 slave1 = new Slave1(receivedPacket.getId(), receivedPacket.getOperation());
+					slave1.start();
+				Slave2 slave2 = new Slave2(receivedPacket.getId(), receivedPacket.getOperation());				
+					slave2.start();
+				
+                new Thread(new ClientHandler(clientSocket, queue, slave1, slave2 )).start(); // Start a new thread for each client
         
       
 			}
