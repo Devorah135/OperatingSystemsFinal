@@ -17,21 +17,28 @@ public class ClientHandler implements Runnable {
 			String input;
 			while ((input = in.readLine()) != null) {
 				Packet receivedPacket = Packet.fromString(input);
-				System.out.println("Received: " + receivedPacket);
+				System.out.println("Received: " + input);
 
 				out.println("Job '" + input + "' acknowledged by master.");
-
-				// Choose slaves based on the operation (JOB_1 or JOB_2)
-				Slave1 slave1 = new Slave1(receivedPacket.getId(), receivedPacket.getOperation());
-				Slave2 slave2 = new Slave2(receivedPacket.getId(), receivedPacket.getOperation());
+				
+				Operation op = receivedPacket.getOperation();
+				switch (op) {
+				case JOB_1:				
+					Slave1 slave1 = new Slave1(receivedPacket.getId(), receivedPacket.getOperation());
+					slave1.start();
+					break;
+				case JOB_2:
+					Slave2 slave2 = new Slave2(receivedPacket.getId(), receivedPacket.getOperation());				
+					slave2.start();
+					break;
+				}
 
 				// Start the slave threads
-				slave1.start();
-				slave2.start();
+				
 
 				// Wait for the slave threads to finish and get their results
-				slave1.join();
-				slave2.join();
+				//slave1.join();
+				//slave2.join();
 
 				// Send back the confirmation to the client
 				out.println("Job completed by slaves for packet: " + input);

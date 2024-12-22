@@ -23,43 +23,9 @@ public class Master {
 		} catch (IOException e) {
             e.printStackTrace();
         }
-		/*		Socket slave1Socket = serverSocket.accept();
-				Socket slave2Socket = serverSocket.accept();
-				
-				// Output streams to send data to the client
-				PrintWriter responseWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-				BufferedReader requestReader = new BufferedReader(
-						new InputStreamReader(clientSocket.getInputStream()));
-				) {
-			System.out.println("Server up and running!");
-		//need a thread for all ways - reading and writing
-		Thread slave1a = new Slave1(0, Operation.JOB_1);
-		Thread slave2a = new Slave2(0, Operation.JOB_1);
-		Thread slave1b = new Slave1(0, Operation.JOB_2);
-		Thread slave2b = new Slave2(0, Operation.JOB_2);
-		MasterRead masterRead = new MasterRead(clientSocket);
-		
-		masterRead.start();
-		slave1a.start();
-		slave2a.start();
-		slave1b.start();
-		slave2b.start();
-		
-		masterRead.join();
-		slave1a.join();
-		slave2a.join();
-		slave1b.join();
-		slave2b.join();
 		
 		
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		*/
-		
-				//receive packet
+		//receive packet
 		//parse the packet
 		//algorithm to choose slave
 		//pass job to slave that is chosen

@@ -15,11 +15,9 @@ public class ClientToMaster extends Thread {
 		try (ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());) 
 		
 		{
-			
 			output.writeObject("from the client");
 			output.writeObject(  "from the client" );
 			Master master = new Master();
-			
 		} 
 		
 		catch (IOException e) {

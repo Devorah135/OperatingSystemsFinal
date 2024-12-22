@@ -60,20 +60,3 @@ public class Slave1 extends Thread {
     }
 
 }
-
-/* Progress Report 1
-* We did it all together on zoom. Devorah typed the code and came up with idea to use an enum for ADD and SUBTRACT,
-* Ilana came up with the idea of how to organize the classes and what jobs the slaves should do.
-* Fraida came up with how to implement the methods.
-* Nechama formed the packet structure.
-*
-* We created all classes that we are going to need: Two slaves, an AddingSlave and a Subtracting Slave,
-* a Client, a Master, and a Packet. We also made an enum so the packet includes metadata of whether the numbers are
-* intended for adding or subtracting.
-*
-* The Adding slave can add and subtract but subtracting is less efficient, and vice versa for the Subtracting Slave.
-*
-* We completed the Packet structure, which holds the packet number, the total number of packets,
-* and two numbers that it will add or subtract.
-*
-* */
