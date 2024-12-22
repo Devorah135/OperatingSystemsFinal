@@ -4,12 +4,16 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Master {
 	
 	public static void main(String[] args) throws InterruptedException {
 		
 		int port = 30123;// Integer.parseInt(args[0]);
+		BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		
 		
 		try (ServerSocket serverSocket = new ServerSocket(port)) {        
 			System.out.println("Master started on port " + port);
@@ -19,6 +23,13 @@ public class Master {
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 
                 new Thread(new ClientHandler(clientSocket)).start(); // Start a new thread for each client
+				// Slave1 slave1 = new Slave1(receivedPacket.getId(), receivedPacket.getOperation());
+				// 	slave1.start();
+				// Slave2 slave2 = new Slave2(receivedPacket.getId(), receivedPacket.getOperation());				
+				// 	slave2.start();
+
+        
+      
 			}
 		} catch (IOException e) {
             e.printStackTrace();

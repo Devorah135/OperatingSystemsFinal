@@ -1,12 +1,16 @@
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.BlockingQueue;
 
 public class ClientHandler implements Runnable {
 
 	private Socket clientSocket;
+	private BlockingQueue<Packet> queue;
 
-	public ClientHandler(Socket clientSocket) {
+	public ClientHandler(Socket clientSocket,  BlockingQueue<Packet> queue) {
 		this.clientSocket = clientSocket;
+		this.queue = queue;
+
 	}
 
 	@Override
@@ -17,29 +21,26 @@ public class ClientHandler implements Runnable {
 			String input;
 			while ((input = in.readLine()) != null) {
 				Packet receivedPacket = Packet.fromString(input);
+				queue.put(receivedPacket);
 				System.out.println("Received: " + input);
 
 				out.println("Job '" + input + "' acknowledged by master.");
 				
 				Operation op = receivedPacket.getOperation();
+				
 				switch (op) {
 				case JOB_1:				
-					Slave1 slave1 = new Slave1(receivedPacket.getId(), receivedPacket.getOperation());
-					slave1.start();
+					
 					break;
 				case JOB_2:
-					Slave2 slave2 = new Slave2(receivedPacket.getId(), receivedPacket.getOperation());				
-					slave2.start();
+				
 					break;
 				}
 
 				// Start the slave threads
-				
-
 				// Wait for the slave threads to finish and get their results
 				//slave1.join();
 				//slave2.join();
-
 				// Send back the confirmation to the client
 				out.println("Job completed by slaves for packet: " + input);
 
