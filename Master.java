@@ -12,7 +12,7 @@ public class Master {
 	public static void main(String[] args) throws InterruptedException {
 		
 		int port = 30123;// Integer.parseInt(args[0]);
-		BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		BlockingQueue<Packet> queue = new LinkedBlockingQueue<>();
 		
 		
 		try (ServerSocket serverSocket = new ServerSocket(port)) {        
@@ -22,9 +22,9 @@ public class Master {
 				Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 
-				Slave1 slave1 = new Slave1(receivedPacket.getId(), receivedPacket.getOperation());
+				Slave1 slave1 = new Slave1();
 					slave1.start();
-				Slave2 slave2 = new Slave2(receivedPacket.getId(), receivedPacket.getOperation());				
+				Slave2 slave2 = new Slave2();				
 					slave2.start();
 				
                 new Thread(new ClientHandler(clientSocket, queue, slave1, slave2 )).start(); // Start a new thread for each client

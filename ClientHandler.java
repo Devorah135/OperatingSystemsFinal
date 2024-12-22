@@ -26,7 +26,7 @@ public class ClientHandler implements Runnable {
 			while ((input = in.readLine()) != null) {
 				Packet receivedPacket = Packet.fromString(input);
 				queue.put(receivedPacket);
-				System.out.println("Received: " + input);
+				System.out.println("Received: " + input.toString());
 
 				out.println("Job '" + input + "' acknowledged by master.");
 				

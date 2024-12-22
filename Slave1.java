@@ -7,10 +7,7 @@ public class Slave1 extends Thread {
     private String message;
     private BlockingQueue<Packet> queue;
 
-    public Slave1(int id, Operation o) {
-        this.id = id;
-        this.operation = o;
-        message = null;
+    public Slave1() { 
     }
 
     public String job1() throws InterruptedException {
