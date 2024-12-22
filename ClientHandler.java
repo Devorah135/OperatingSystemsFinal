@@ -34,10 +34,13 @@ public class ClientHandler implements Runnable {
 				slave2.join();
 
 				// Send back the confirmation to the client
-				out.println("Job completed by slaves for packet: " + packet);
+				out.println("Job completed by slaves for packet: " + input);
 
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
