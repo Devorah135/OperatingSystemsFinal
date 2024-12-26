@@ -2,6 +2,8 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
 
@@ -18,9 +20,11 @@ public class Client {
 		String hostName = "localhost"; // args[0];
 		int port = 30123; // Integer.parseInt(args[1]);
 
-		try (Socket socket = new Socket(hostName, port);
-				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+		try (
+			Socket socket = new Socket(hostName, port);
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+			) {
 			Scanner scanner = new Scanner(System.in);
 
 			while (true) {
@@ -30,6 +34,9 @@ public class Client {
 				if (job == 3) {
 					break; // Exit loop if user wants to stop
 				}
+				
+				BlockingQueue<Packet> queue = new LinkedBlockingQueue<>();
+				new ClientToMaster ctm = new ClientToMaster(socket, queue);
 
 				Packet packet = null;
 				if (job == 1) {

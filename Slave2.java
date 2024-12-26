@@ -1,13 +1,17 @@
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Slave2 extends Thread {
 
 	private BlockingQueue<Packet> queue;
 	private ClientHandler clientHandler;
 
-	public Slave2(BlockingQueue<Packet> blockingQueue) {
-		this.queue = blockingQueue;
+	public Slave2() {
 	}
+	
+	public void setQ(BlockingQueue<Packet> blockingQueue) {
+		this.queue = blockingQueue;
+    }
 
 	 // Setter for ClientHandler
     public void setClientHandler(ClientHandler clientHandler) {
@@ -57,5 +61,6 @@ public class Slave2 extends Thread {
 	public BlockingQueue<Packet> getQueue() {
 		return queue;
 	}
+	
 }
 

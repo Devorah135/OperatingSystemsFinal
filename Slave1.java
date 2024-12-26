@@ -1,17 +1,21 @@
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Slave1 extends Thread {
 
 	private BlockingQueue<Packet> queue;
     private ClientHandler clientHandler;
 
-	public Slave1(BlockingQueue<Packet> blockingQueue) {
-		this.queue = blockingQueue;
+	public Slave1() {
 	}
 	
 	// Setter for ClientHandler
     public void setClientHandler(ClientHandler clientHandler) {
         this.clientHandler = clientHandler;
+    }
+    
+    public void setQ(BlockingQueue<Packet> blockingQueue) {
+		this.queue = blockingQueue;
     }
 
 	public String job1() throws InterruptedException {
@@ -37,6 +41,7 @@ public class Slave1 extends Thread {
 
 	@Override
 	public void run() {
+		System.out.println("Slave 1 started.");
 		while (true) { // Keep processing jobs from the queue
 			try {
 				// Take a job from the queue (blocks if the queue is empty)
@@ -56,7 +61,7 @@ public class Slave1 extends Thread {
 					result = "Unknown job type.";
 				}
                 clientHandler.updateCounterAfterCompletion(operation, 1); // Notify master to update counter
-				System.out.println("Slave completed: " + result);
+				System.out.println("Slave 1 completed: " + result);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 				System.err.println("Slave interrupted: " + e.getMessage());
@@ -64,4 +69,5 @@ public class Slave1 extends Thread {
 			}
 		}
 	}
+	
 }

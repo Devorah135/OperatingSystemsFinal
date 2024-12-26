@@ -13,18 +13,18 @@ public class ClientHandler implements Runnable {
     private int counter2 = 0; // shared resource for queue2
 
     // Client handler accepts the socket, a queue, and the two slave threads from main
-    public ClientHandler(Socket clientSocket, BlockingQueue<Packet> queue, Slave1 slave1, Slave2 slave2) {
+    public ClientHandler(Socket clientSocket, BlockingQueue<Packet> queue) {
         this.clientSocket = clientSocket;
         this.queue = queue;
-        this.slave1 = slave1;
-        this.slave2 = slave2;
+//        this.slave1 = slave1;
+//        this.slave2 = slave2;
     }
 
     @Override
     public void run() {
         try (
-	        	BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+        	BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
             ) {
 
             String input; // the packet that is received from the client, in string form
